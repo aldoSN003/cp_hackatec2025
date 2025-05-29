@@ -37,9 +37,9 @@ function Layout() {
       {/* Sidebar - desktop */}
       <aside className="hidden md:flex flex-col w-64 bg-white border-r border-gray-200">
         <div className="p-4 border-b border-gray-200">
-          <div className="flex items-center">
-            <Activity className="h-8 w-8 text-primary-600 mr-3" />
-            <h1 className="text-xl font-semibold text-gray-900">MediCare</h1>
+          <div className="flex items-center justify-center">
+
+            <img className='w-25' src="img.png" alt="" />
           </div>
         </div>
         

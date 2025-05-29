@@ -5,17 +5,61 @@ import { mockUsers, mockConversationMessages, mockPatientSummary } from '../mock
 import { Stethoscope, ClipboardCheck, Calendar, Clock } from 'lucide-react';
 import {getAiPreDiagnosis} from "./ai.js";
 import { useEffect } from 'react';
+
+
+// open ai
+
+import fs from "fs";
+import path from "path";
+import OpenAI from "openai";
+
+
+import axios from "axios";
+
+
+
+
 const VoiceAssistant = () => {
   const [messages, setMessages] = useState(mockConversationMessages);
   const [showSummary, setShowSummary] = useState(false);
   const [isConsultationComplete, setIsConsultationComplete] = useState(false);
 
   const [summaryData, setSummaryData] = useState(null);
+
+  const tts = async (input) => {
+    try {
+      const openai = new OpenAI({
+        apiKey: import.meta.env.VITE_OPENAI_API_KEY,
+        dangerouslyAllowBrowser: true, // Solo si estás seguro
+      });
+
+      const mp3 = await openai.audio.speech.create({
+        model: "tts-1",
+        voice: "coral", // o "shimmer", "echo", etc.
+        input
+      });
+
+
+      // Convertir la respuesta a blob y reproducirla
+      const blob = new Blob([await mp3.arrayBuffer()], { type: "audio/mpeg" });
+      const url = URL.createObjectURL(blob);
+      const audio = new Audio(url);
+      await audio.play();
+    } catch (err) {
+      console.error("Error generando o reproduciendo audio:", err);
+    }
+  };
+
+
   useEffect(() => {
+
+
+
+
     if (isConsultationComplete) {
       const fetchPreDiagnosis = async () => {
         const data = await getAiPreDiagnosis(
-            "P123",
+            "Victor Hugo Lizama Peña",
             ["diabetes", "hipertensión"],
             ["dolor de cabeza", "escurrimiento nasal"],
             "cansancio"
@@ -70,6 +114,7 @@ const VoiceAssistant = () => {
             <p className="text-gray-600">Hable con su proveedor de atención médica y reciba una evaluación preliminar</p>
           </header>
 
+
           <div className="bg-white rounded-lg shadow-sm p-4 mb-6 flex justify-between">
             <div className="flex items-center gap-2 text-blue-600">
               <Stethoscope size={20} />
@@ -95,11 +140,13 @@ const VoiceAssistant = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2">
               <div className="bg-white rounded-xl shadow-md h-[600px]">
+
                 <ConversationView
                     currentUser={currentUser}
                     nurse={nurse}
                     messages={messages}
                     onSendMessage={handleSendMessage}
+                    setIsConsultationComplete={()=>setIsConsultationComplete(true)}
                 />
               </div>
             </div>

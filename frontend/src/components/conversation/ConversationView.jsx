@@ -4,16 +4,78 @@ import VoiceVisualizer from '../VoiceVisualizer';
 import Button from '../ui/Button';
 import {Mic, MicOff, Send} from 'lucide-react';
 import {getAiPreDiagnosis} from "../../views/ai.js";
+import OpenAI from "openai";
 
-const ConversationView = ({currentUser, nurse, messages, onSendMessage}) => {
+const ConversationView = ({currentUser, nurse, messages, onSendMessage, setIsConsultationComplete}) => {
     const [inputValue, setInputValue] = useState('');
     const [isRecording, setIsRecording] = useState(false);
     const messagesEndRef = useRef(null);
-
-    useEffect(() => {
+    const [audios, setAudios] = useState([]);
+    /*useEffect(() => {
         messagesEndRef.current?.scrollIntoView({behavior: 'smooth'});
-    }, [messages]);
+    }, [messages]);*/
 
+    const reproducirSecuencialmente = async () => {
+        for (const texto of audios) {
+            await reproducirTexto(texto);
+        }
+
+        setIsConsultationComplete(true);
+    };
+    const reproducirTexto = async (texto) => {
+        try {
+            const openai = new OpenAI({
+                apiKey: import.meta.env.VITE_OPENAI_API_KEY,
+                dangerouslyAllowBrowser: true,
+            });
+
+            const mp3 = await openai.audio.speech.create({
+                model: "tts-1",
+                voice: "nova", // o "shimmer", "echo"
+                input: texto,
+            });
+
+            const blob = new Blob([await mp3.arrayBuffer()], { type: "audio/mpeg" });
+            const url = URL.createObjectURL(blob);
+            const audio = new Audio(url);
+
+            return new Promise((resolve) => {
+                audio.onended = resolve;
+                audio.onerror = () => {
+                    console.error("Error al reproducir el audio");
+                    resolve();
+                };
+                audio.play();
+            });
+        } catch (err) {
+            console.error("Error generando audio:", err);
+        }
+    };
+
+
+
+    const tts = async (input) => {
+        try {
+            const openai = new OpenAI({
+                apiKey: import.meta.env.VITE_OPENAI_API_KEY,
+                dangerouslyAllowBrowser: true, // Solo si estás seguro
+            });
+
+            const mp3 = await openai.audio.speech.create({
+                model: "tts-1",
+                voice: "coral", // o "shimmer", "echo", etc.
+                input
+            });
+
+            // Convertir la respuesta a blob y reproducirla
+            const blob = new Blob([await mp3.arrayBuffer()], {type: "audio/mpeg"});
+            const url = URL.createObjectURL(blob);
+            const audio = new Audio(url);
+            await audio.play();
+        } catch (err) {
+            console.error("Error generando o reproduciendo audio:", err);
+        }
+    };
     const handleSendMessage = () => {
 
         if (inputValue.trim()) {
@@ -28,6 +90,12 @@ const ConversationView = ({currentUser, nurse, messages, onSendMessage}) => {
             handleSendMessage();
         }
     };
+    useEffect(() => {
+        const nuevosAudios = messages.map((msg) => msg.content);
+        setAudios(nuevosAudios);
+        console.log(nuevosAudios);
+
+    }, [messages]);
 
 
     const toggleRecording = () => {
@@ -47,24 +115,20 @@ const ConversationView = ({currentUser, nurse, messages, onSendMessage}) => {
           </span>
                 </div>
             </div>
-            <button onClick={() => {
-                getAiPreDiagnosis(
-                    "P123",
-                    ["diabetes", "hipertensión"],
-                    ["dolor de cabeza", "escurrimiento nasal"],
-                    "cansancio"
-                )
-            }} type="submit">
-                PRESIONAAA
-            </button>
+            <Button onClick={reproducirSecuencialmente}>
+                Reproducir mensajes
+            </Button>
             <div className="flex-1 overflow-y-auto p-4 bg-white">
-                {messages.map((message) => (
-                    <ConversationBubble
-                        key={message.id}
-                        message={message}
-                        isUser={message.sender.id === currentUser.id}
-                    />
-                ))}
+                {messages.map((message) => {
+message.content
+                    return (
+                        <ConversationBubble
+                            key={message.id}
+                            message={message}
+                            isUser={message.sender.id === currentUser.id}
+                        />
+                    );
+                })}
                 <div ref={messagesEndRef}/>
             </div>
 
