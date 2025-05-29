@@ -1,12 +1,6 @@
 import React from 'react';
-import { PatientSummary } from '../../types';
 
-interface PatientSummaryCardProps {
-  summary: PatientSummary;
-  patientName: string;
-}
-
-const PatientSummaryCard: React.FC<PatientSummaryCardProps> = ({
+const PatientSummaryCard = ({
   summary,
   patientName,
 }) => {

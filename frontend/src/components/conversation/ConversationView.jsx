@@ -1,28 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ConversationMessage, User } from '../../types';
 import ConversationBubble from './ConversationBubble';
 import VoiceVisualizer from '../VoiceVisualizer';
 import Button from '../ui/Button';
 import { Mic, MicOff, Send } from 'lucide-react';
 
-interface ConversationViewProps {
-  currentUser: User;
-  nurse: User;
-  messages: ConversationMessage[];
-  onSendMessage: (content: string, isAudio?: boolean) => void;
-}
-
-const ConversationView: React.FC<ConversationViewProps> = ({
-  currentUser,
-  nurse,
-  messages,
-  onSendMessage,
-}) => {
+const ConversationView = ({ currentUser, nurse, messages, onSendMessage }) => {
   const [inputValue, setInputValue] = useState('');
   const [isRecording, setIsRecording] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesEndRef = useRef(null);
 
-  // Scroll to bottom of messages
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
@@ -34,7 +20,7 @@ const ConversationView: React.FC<ConversationViewProps> = ({
     }
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
+  const handleKeyPress = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSendMessage();
@@ -44,14 +30,12 @@ const ConversationView: React.FC<ConversationViewProps> = ({
   const toggleRecording = () => {
     setIsRecording(!isRecording);
     if (isRecording) {
-      // In a real app, this would stop recording and process the audio
       onSendMessage("Voice message sent", true);
     }
   };
 
   return (
     <div className="flex flex-col h-full bg-white rounded-xl overflow-hidden shadow-md">
-      {/* Header */}
       <div className="p-4 border-b border-gray-100 flex items-center justify-between bg-blue-50">
         <div className="flex items-center gap-3">
           <h2 className="text-lg font-semibold text-gray-800">{nurse.name}</h2>
@@ -60,8 +44,7 @@ const ConversationView: React.FC<ConversationViewProps> = ({
           </span>
         </div>
       </div>
-      
-      {/* Messages Area */}
+
       <div className="flex-1 overflow-y-auto p-4 bg-white">
         {messages.map((message) => (
           <ConversationBubble
@@ -72,8 +55,7 @@ const ConversationView: React.FC<ConversationViewProps> = ({
         ))}
         <div ref={messagesEndRef} />
       </div>
-      
-      {/* Input Area */}
+
       <div className="p-4 border-t border-gray-100 bg-gray-50">
         <div className="flex items-center gap-3">
           <Button
@@ -83,17 +65,15 @@ const ConversationView: React.FC<ConversationViewProps> = ({
           >
             {isRecording ? <MicOff size={20} /> : <Mic size={20} />}
           </Button>
-          
+
           <div className="flex-1 relative">
-            {isRecording && (
+            {isRecording ? (
               <div className="absolute inset-0 flex items-center justify-center bg-white border border-gray-200 rounded-full overflow-hidden">
                 <div className="w-full h-8">
                   <VoiceVisualizer isActive={true} />
                 </div>
               </div>
-            )}
-            
-            {!isRecording && (
+            ) : (
               <input
                 type="text"
                 value={inputValue}
@@ -104,7 +84,7 @@ const ConversationView: React.FC<ConversationViewProps> = ({
               />
             )}
           </div>
-          
+
           {!isRecording && (
             <Button
               onClick={handleSendMessage}

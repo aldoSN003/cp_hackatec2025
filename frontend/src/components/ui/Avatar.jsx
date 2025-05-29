@@ -1,13 +1,6 @@
 import React from 'react';
 
-interface AvatarProps {
-  src?: string;
-  alt?: string;
-  size?: 'sm' | 'md' | 'lg' | 'xl';
-  fallback?: string;
-}
-
-const Avatar: React.FC<AvatarProps> = ({
+const Avatar = ({
   src,
   alt = 'Avatar',
   size = 'md',
@@ -28,13 +21,13 @@ const Avatar: React.FC<AvatarProps> = ({
   };
 
   return (
-    <div 
+    <div
       className={`${sizeStyles[size]} rounded-full overflow-hidden flex items-center justify-center bg-blue-100`}
     >
       {src ? (
-        <img 
-          src={src} 
-          alt={alt} 
+        <img
+          src={src}
+          alt={alt}
           className="w-full h-full object-cover"
         />
       ) : (

@@ -1,42 +1,39 @@
 import React, { useState } from 'react';
-import ConversationView from '../components/conversation/ConversationView';
-import PatientSummaryCard from '../components/patient/PatientSummaryCard';
-import { ConversationMessage } from '../types';
-import { mockUsers, mockConversationMessages, mockPatientSummary } from '../mock/data';
+import ConversationView from '../components/conversation/ConversationView.jsx';
+import PatientSummaryCard from '../components/patient/PatientSummaryCard.jsx';
+import { mockUsers, mockConversationMessages, mockPatientSummary } from '../mock/data.jsx';
 import { Stethoscope, ClipboardCheck, Calendar, Clock } from 'lucide-react';
 
-const PatientConsultation: React.FC = () => {
-  const [messages, setMessages] = useState<ConversationMessage[]>(mockConversationMessages);
+const VoiceAssistant = () => {
+  const [messages, setMessages] = useState(mockConversationMessages);
   const [showSummary, setShowSummary] = useState(false);
   const [isConsultationComplete, setIsConsultationComplete] = useState(false);
-  
-  const currentUser = mockUsers[0]; // Patient
-  const nurse = mockUsers[2]; // Nurse
 
-  const handleSendMessage = (content: string, isAudio: boolean = false) => {
-    const newMessage: ConversationMessage = {
+  const currentUser = mockUsers[0];
+  const nurse = mockUsers[2];
+
+  const handleSendMessage = (content, isAudio = false) => {
+    const newMessage = {
       id: `msg${messages.length + 1}`,
       sender: currentUser,
       content,
       timestamp: new Date(),
       isAudio,
     };
-    
+
     setMessages([...messages, newMessage]);
-    
-    // Simulate nurse response after patient message
+
     setTimeout(() => {
-      const nurseResponse: ConversationMessage = {
+      const nurseResponse = {
         id: `msg${messages.length + 2}`,
         sender: nurse,
         content: "Thank you for providing that information. Based on your symptoms, I'll generate a preliminary assessment. The doctor will see you shortly.",
         timestamp: new Date(),
       };
-      
+
       setMessages(prev => [...prev, nurseResponse]);
       setIsConsultationComplete(true);
-      
-      // Show summary after the nurse's final response
+
       setTimeout(() => {
         setShowSummary(true);
       }, 1000);
@@ -50,32 +47,30 @@ const PatientConsultation: React.FC = () => {
           <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">Patient Consultation</h1>
           <p className="text-gray-600">Talk to your healthcare provider and receive a preliminary assessment</p>
         </header>
-        
-        {/* Status Bar */}
+
         <div className="bg-white rounded-lg shadow-sm p-4 mb-6 flex justify-between">
           <div className="flex items-center gap-2 text-blue-600">
             <Stethoscope size={20} />
             <span className="font-medium">Nurse Consultation</span>
           </div>
-          
+
           <div className="flex items-center gap-2 text-gray-600">
             <Clock size={18} />
             <span>{new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
           </div>
-          
+
           <div className="flex items-center gap-2 text-gray-600">
             <Calendar size={18} />
             <span>{new Date().toLocaleDateString()}</span>
           </div>
-          
+
           <div className="flex items-center gap-2 text-green-600">
             <ClipboardCheck size={18} />
             <span className="font-medium">Active Session</span>
           </div>
         </div>
-        
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Main Conversation Area */}
           <div className="lg:col-span-2">
             <div className="bg-white rounded-xl shadow-md h-[600px]">
               <ConversationView
@@ -86,8 +81,7 @@ const PatientConsultation: React.FC = () => {
               />
             </div>
           </div>
-          
-          {/* Patient Summary Area */}
+
           <div className="lg:col-span-1">
             {showSummary ? (
               <div className="h-[600px] overflow-y-auto">
@@ -103,8 +97,8 @@ const PatientConsultation: React.FC = () => {
                 </div>
                 <h3 className="text-xl font-semibold text-gray-800 mb-2">Patient Summary</h3>
                 <p className="text-gray-600 mb-4">
-                  {isConsultationComplete 
-                    ? "Generating your assessment..." 
+                  {isConsultationComplete
+                    ? "Generating your assessment..."
                     : "Complete the consultation to receive your assessment"}
                 </p>
                 {isConsultationComplete && (
@@ -123,4 +117,4 @@ const PatientConsultation: React.FC = () => {
   );
 };
 
-export default PatientConsultation;
+export default VoiceAssistant;
