@@ -1,5 +1,4 @@
 
-
 from flask import Blueprint, request, jsonify
 from flask_cors import cross_origin
 from flask_jwt_extended import jwt_required
@@ -13,9 +12,14 @@ client = OpenAI(
     api_key="sk-PHleLi4sWujf-4j0791qo72kNLaKQRs9HewdJjziYqT3BlbkFJykW7oddp85lom1c9tHDLQxqGp-tiZh7wAm12wPi3wA"
 )
 
+client = OpenAI(
+    api_key="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"
+)
+
 
 @assistant_bp.route('/pre-diagnosis', methods=['POST'])
-@cross_origin(origins=Config.ROUTE)
+@cross_origin(origins=Config.ROUTE, supports_credentials=True)
+
 def prediagnosis():
     try:
         data = request.get_json()
