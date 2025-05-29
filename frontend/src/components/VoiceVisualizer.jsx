@@ -1,16 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 
-interface VoiceVisualizerProps {
-  isActive: boolean;
-  color?: string;
-}
-
-const VoiceVisualizer: React.FC<VoiceVisualizerProps> = ({ 
-  isActive, 
-  color = 'rgba(59, 130, 246, 0.8)' 
-}) => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const animationRef = useRef<number>();
+const VoiceVisualizer = ({ isActive, color = 'rgba(59, 130, 246, 0.8)' }) => {
+  const canvasRef = useRef(null);
+  const animationRef = useRef();
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -19,7 +11,6 @@ const VoiceVisualizer: React.FC<VoiceVisualizerProps> = ({
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Set canvas dimensions
     const resizeCanvas = () => {
       canvas.width = canvas.offsetWidth * window.devicePixelRatio;
       canvas.height = canvas.offsetHeight * window.devicePixelRatio;
@@ -29,7 +20,6 @@ const VoiceVisualizer: React.FC<VoiceVisualizerProps> = ({
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
-    // Animation variables
     const barCount = 5;
     const barWidth = 4;
     const barSpacing = 6;
@@ -39,38 +29,37 @@ const VoiceVisualizer: React.FC<VoiceVisualizerProps> = ({
 
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
-      // Center the bars horizontally
       const startX = (canvas.offsetWidth - totalWidth) / 2;
-      
+
       for (let i = 0; i < barCount; i++) {
-        // If active, set random target heights
         if (isActive) {
           if (Math.random() > 0.7 || targetHeights[i] === 0) {
             targetHeights[i] = Math.random() * 20 + 5;
           }
         } else {
-          targetHeights[i] = 3; // Default small height when inactive
+          targetHeights[i] = 3;
         }
-        
-        // Smoothly interpolate current height to target height
+
         heights[i] += (targetHeights[i] - heights[i]) * 0.2;
-        
-        // Draw the bar
+
         const x = startX + i * (barWidth + barSpacing);
         const y = (canvas.offsetHeight - heights[i]) / 2;
-        
+
         ctx.fillStyle = color;
         ctx.beginPath();
-        ctx.roundRect(x, y, barWidth, heights[i], 2);
+        if (ctx.roundRect) {
+          ctx.roundRect(x, y, barWidth, heights[i], 2);
+        } else {
+          ctx.rect(x, y, barWidth, heights[i]);
+        }
         ctx.fill();
       }
-      
+
       animationRef.current = requestAnimationFrame(animate);
     };
-    
+
     animate();
-    
+
     return () => {
       window.removeEventListener('resize', resizeCanvas);
       if (animationRef.current) {
@@ -79,12 +68,7 @@ const VoiceVisualizer: React.FC<VoiceVisualizerProps> = ({
     };
   }, [isActive, color]);
 
-  return (
-    <canvas 
-      ref={canvasRef} 
-      className="w-full h-full"
-    />
-  );
+  return <canvas ref={canvasRef} className="w-full h-full" />;
 };
 
 export default VoiceVisualizer;
