@@ -7,6 +7,7 @@ import CalendarView from './views/CalendarView';
 import VoiceAssistant from './views/VoiceAssistant';
 import { AppProvider } from './context/AppContext';
 import './App.css';
+import MedicalAssistant from "./components/ai/MedicalAssistant.jsx";
 
 //<Route path="/patients" element={<PatientGridView />} />
 
@@ -18,7 +19,7 @@ function App() {
           <Route path="/" element={<Layout />}>
             <Route index element={<Navigate to="/assistant" replace />} />
             <Route path="/calendar" element={<CalendarView />} />
-            <Route path="/assistant" element={<VoiceAssistant />} />
+            <Route path="/assistant" element={<MedicalAssistant />} />
           </Route>
         </Routes>
       </Router>
