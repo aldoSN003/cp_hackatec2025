@@ -1,105 +1,106 @@
 import React from 'react';
 
-// Mock Users
+// Usuarios de prueba
 const mockUsers = [
   {
     id: 'user1',
-    name: 'John Doe',
+    name: 'Juan Pérez',
     role: 'patient',
     avatar: 'https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&w=150',
   },
   {
     id: 'user2',
-    name: 'Dr. Sarah Chen',
+    name: 'Dra. Sarah Chen',
     role: 'doctor',
     avatar: 'https://images.pexels.com/photos/5452201/pexels-photo-5452201.jpeg?auto=compress&cs=tinysrgb&w=150',
   },
   {
     id: 'user3',
-    name: 'Nurse Maria Rodriguez',
+    name: 'Enfermera María Rodríguez',
     role: 'nurse',
     avatar: 'https://images.pexels.com/photos/5207082/pexels-photo-5207082.jpeg?auto=compress&cs=tinysrgb&w=150',
   },
 ];
 
-// Mock Patients
+// Pacientes de prueba
 const mockPatients = [
   {
     id: 'patient1',
-    name: 'John Doe',
+    name: 'Juan Pérez',
     age: 45,
-    gender: 'Male',
-    medicalHistory: ['Hypertension', 'Type 2 Diabetes'],
-    currentSymptoms: ['Chest pain', 'Shortness of breath', 'Fatigue'],
-    assignedDoctor: 'Dr. Sarah Chen',
-    assignedRoom: 'Room 302',
-    assignedEquipment: ['ECG Monitor', 'Oxygen Supply'],
+    gender: 'Masculino',
+    medicalHistory: ['Hipertensión', 'Diabetes Tipo 2'],
+    currentSymptoms: ['Dolor en el pecho', 'Dificultad para respirar', 'Fatiga'],
+    assignedDoctor: 'Dra. Sarah Chen',
+    assignedRoom: 'Sala 302',
+    assignedEquipment: ['Monitor ECG', 'Suministro de Oxígeno'],
   },
 ];
 
-// Mock Conversation Messages
+// Mensajes de conversación de prueba
+// Mensajes de conversación de prueba
 const mockConversationMessages = [
   {
     id: 'msg1',
-    sender: mockUsers[2], // Nurse
-    content: "Hello John, I'm Nurse Maria. How are you feeling today?",
+    sender: mockUsers[2], // Enfermera
+    content: "Hola Juan, soy la Enfermera María. ¿Qué lo trae a consulta el día de hoy?",
     timestamp: new Date(Date.now() - 35 * 60000),
   },
   {
     id: 'msg2',
-    sender: mockUsers[0], // Patient
-    content: "I've been having chest pain since last night. It gets worse when I try to breathe deeply.",
+    sender: mockUsers[0], // Paciente
+    content: "Me he sentido muy cansado últimamente. También tengo dolor de cabeza y escurrimiento nasal.",
     timestamp: new Date(Date.now() - 34 * 60000),
   },
   {
     id: 'msg3',
-    sender: mockUsers[2], // Nurse
-    content: 'I\'m sorry to hear that. Can you describe the pain? Is it sharp, dull, or pressure-like?',
+    sender: mockUsers[2],
+    content: "Entiendo. ¿Desde cuándo presenta estos síntomas?",
     timestamp: new Date(Date.now() - 33 * 60000),
   },
   {
     id: 'msg4',
     sender: mockUsers[0],
-    content: "It's a sharp pain, mostly on the left side. And I'm feeling quite short of breath.",
+    content: "Desde hace tres días. Empezó con el cansancio y luego vinieron el dolor de cabeza y el escurrimiento nasal.",
     timestamp: new Date(Date.now() - 32 * 60000),
   },
   {
     id: 'msg5',
     sender: mockUsers[2],
-    content: 'Thank you for describing that. Have you experienced any other symptoms like sweating, nausea, or dizziness?',
+    content: "Gracias por la información. ¿Tiene alguna condición médica crónica como diabetes o hipertensión?",
     timestamp: new Date(Date.now() - 31 * 60000),
   },
   {
     id: 'msg6',
     sender: mockUsers[0],
-    content: "Yes, I've been sweating more than usual and felt a bit dizzy when getting up this morning.",
+    content: "Sí, tengo diabetes y también hipertensión. Tomo medicamentos para ambas.",
     timestamp: new Date(Date.now() - 30 * 60000),
   },
   {
     id: 'msg7',
     sender: mockUsers[2],
-    content: 'I understand. Do you have any history of heart problems or high blood pressure?',
-    timestamp: new Date(Date.now() - 28 * 60000),
+    content: "Perfecto, gracias por compartirlo. En base a sus síntomas y condiciones previas, voy a generar una evaluación preliminar.",
+    timestamp: new Date(Date.now() - 29 * 60000),
   },
   {
     id: 'msg8',
-    sender: mockUsers[0],
-    content: "I've been diagnosed with high blood pressure about 5 years ago. I'm taking medication for it.",
-    timestamp: new Date(Date.now() - 27 * 60000),
+    sender: mockUsers[2],
+    content: "El doctor revisará su caso en breve.",
+    timestamp: new Date(Date.now() - 28 * 60000),
   },
 ];
 
-// Mock Patient Summary
+// Resumen del paciente de prueba
 const mockPatientSummary = {
   patientId: 'patient1',
-  possibleConditions: ['Acute Coronary Syndrome', 'Angina', 'Pericarditis'],
-  recommendedTests: ['ECG', 'Cardiac Enzymes', 'Chest X-ray'],
-  assignedRoom: 'Room 302',
-  assignedDoctor: 'Dr. Sarah Chen',
-  assignedEquipment: ['ECG Monitor', 'Oxygen Supply', 'IV Line'],
+  possibleConditions: ['Síndrome Coronario Agudo', 'Angina', 'Pericarditis'],
+  recommendedTests: ['ECG', 'Enzimas Cardíacas', 'Radiografía de Tórax'],
+  assignedRoom: 'Sala 302',
+  assignedDoctor: 'Dra. Sarah Chen',
+  assignedEquipment: ['Monitor ECG', 'Suministro de Oxígeno', 'Línea IV'],
   urgencyLevel: 'high',
   notes:
-    'Patient presents with acute chest pain and shortness of breath. History of hypertension. Needs immediate cardiac workup.',
+      'El paciente presenta dolor torácico agudo y dificultad respiratoria. Historial de hipertensión. Necesita evaluación cardíaca inmediata.',
 };
 
 export {

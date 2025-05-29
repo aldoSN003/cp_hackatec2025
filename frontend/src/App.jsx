@@ -19,7 +19,7 @@ function App() {
           <Route path="/" element={<Layout />}>
             <Route index element={<Navigate to="/assistant" replace />} />
             <Route path="/calendar" element={<CalendarView />} />
-            <Route path="/assistant" element={<MedicalAssistant />} />
+            <Route path="/assistant" element={<VoiceAssistant />} />
           </Route>
         </Routes>
       </Router>
